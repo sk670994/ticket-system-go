@@ -18,8 +18,10 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Create the application's in-memory store.
 	appStore := store.NewStore()
 
+	// Create handlers using the shared store.
 	authHandler := &handlers.AuthHandler{
 		Store: appStore,
 	}
@@ -28,6 +30,7 @@ func main() {
 		Store: appStore,
 	}
 
+	// Create the HTTP router.
 	mux := http.NewServeMux()
 
 	// Public endpoints.
@@ -36,22 +39,31 @@ func main() {
 	mux.HandleFunc("POST /auth/login", authHandler.Login)
 
 	// Protected ticket endpoints.
-	mux.Handle("POST /tickets",
+	mux.Handle(
+		"POST /tickets",
 		middleware.Auth(http.HandlerFunc(ticketHandler.CreateTicket)),
 	)
 
-	mux.Handle("GET /tickets",
+	mux.Handle(
+		"GET /tickets",
 		middleware.Auth(http.HandlerFunc(ticketHandler.ListTickets)),
 	)
 
-	mux.Handle("GET /tickets/{id}",
+	mux.Handle(
+		"GET /tickets/{id}",
 		middleware.Auth(http.HandlerFunc(ticketHandler.GetTicket)),
 	)
 
-	mux.Handle("PATCH /tickets/{id}/status",
+	mux.Handle(
+		"PATCH /tickets/{id}/status",
 		middleware.Auth(http.HandlerFunc(ticketHandler.UpdateTicketStatus)),
 	)
 
+	// Serve the frontend.
+	mux.Handle("/", http.FileServer(http.Dir("./frontend")))
+
+	// Use PORT from the environment for deployment.
+	// Default to 8080 for local development.
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

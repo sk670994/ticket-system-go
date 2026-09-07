@@ -87,7 +87,7 @@ Protected endpoints require:
 ```text
 
 Authorization: Bearer <JWT>
-
+```
 
 ## Deployment
 

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Ticket System</h1>
+        <button id="logoutBtn" class="secondary hidden">Logout</button>
+    </div>
+
+    <!-- Auth Section -->
+    <section id="authSection">
+
+        <div class="card">
+            <h2 id="authTitle">Login</h2>
+
+            <input id="email" type="email" placeholder="Email">
+            <input id="password" type="password" placeholder="Password">
+
+            <button id="authBtn">Login</button>
+
+            <p id="switchText">
+                Don't have an account?
+                <button id="switchAuth" class="link">Register</button>
+            </p>
+
+            <p id="authMessage" class="message"></p>
+        </div>
+
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="hidden">
+
+        <div class="card">
+            <h2>Create Ticket</h2>
+
+            <input id="ticketTitle" type="text" placeholder="Ticket title">
+
+            <textarea
+                id="ticketDescription"
+                placeholder="Ticket description"
+                rows="4">
+            </textarea>
+
+            <button id="createTicketBtn">Create Ticket</button>
+
+            <p id="ticketMessage" class="message"></p>
+        </div>
+
+        <div class="card">
+            <div class="sectionHeader">
+                <h2>My Tickets</h2>
+                <button id="refreshBtn" class="secondary">Refresh</button>
+            </div>
+
+            <div id="ticketList"></div>
+        </div>
+
+    </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
