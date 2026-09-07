@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -12,26 +13,39 @@ type contextKey string
 
 const userIDKey contextKey = "userID"
 
+// writeJSON sends a JSON response.
+func writeJSON(w http.ResponseWriter, status int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_ = json.NewEncoder(w).Encode(data)
+}
+
 // Auth protects endpoints that require a valid JWT.
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 
 		if authHeader == "" {
-			http.Error(w, `{"error":"authorization header required"}`, http.StatusUnauthorized)
+			writeJSON(w, http.StatusUnauthorized, map[string]string{
+				"error": "authorization header required",
+			})
 			return
 		}
 
 		parts := strings.SplitN(authHeader, " ", 2)
 
 		if len(parts) != 2 || parts[0] != "Bearer" || parts[1] == "" {
-			http.Error(w, `{"error":"invalid authorization header"}`, http.StatusUnauthorized)
+			writeJSON(w, http.StatusUnauthorized, map[string]string{
+				"error": "invalid authorization header",
+			})
 			return
 		}
 
 		userID, err := utils.ValidateToken(parts[1])
 		if err != nil {
-			http.Error(w, `{"error":"invalid or expired token"}`, http.StatusUnauthorized)
+			writeJSON(w, http.StatusUnauthorized, map[string]string{
+				"error": "invalid or expired token",
+			})
 			return
 		}
 
