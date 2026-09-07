@@ -88,3 +88,22 @@ Protected endpoints require:
 
 Authorization: Bearer <JWT>
 
+
+## Deployment
+
+
+
+Deployed application URL:
+
+
+
+https://ticket-system-go.onrender.com
+
+
+
+Public health check:
+
+
+
+https://ticket-system-go.onrender.com/health
+
